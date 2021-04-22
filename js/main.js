@@ -1,6 +1,7 @@
 'use strict';
 
 const PHOTOS_AMOUNT = 25;
+const body = document.querySelector(`body`);
 
 const MESSAGES = [
   `Всё отлично!`,
@@ -87,3 +88,36 @@ dataBase.forEach((element) => {
 });
 
 picturesListElement.appendChild(fragment);
+
+const renderBigPicture = (id) => {
+  const bigPicture = document.querySelector(`.big-picture`);
+
+  bigPicture.querySelector(`.big-picture__img`).src = dataBase[id].url;
+  bigPicture.querySelector(`.likes-count`).textContent = dataBase[id].likes;
+  bigPicture.querySelector(`.comments-count`).textContent = dataBase[id].comments.length;
+  bigPicture.querySelector(`.social__caption`).textContent = dataBase[id].description;
+
+  const bigPictureComments = bigPicture.querySelector(`.social__comments`);
+  bigPictureComments.innerHTML = ``;
+
+  const renderComment = (comment) => {
+    return `
+      <li class="social__comment">
+        <img class="social__picture" src="${comment.avatar}" alt="${comment.name}" width="35" height="35">
+        <p class="social__text">${comment.message}</p>
+      </li>
+    `;
+  };
+
+  dataBase[id].comments.forEach((element) => {
+    const comment = renderComment(element);
+    bigPictureComments.insertAdjacentHTML(`beforeend`, comment);
+  });
+
+  bigPicture.classList.remove(`hidden`);
+  bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
+  bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
+  body.classList.add(`modal-open`);
+};
+
+renderBigPicture(0);
