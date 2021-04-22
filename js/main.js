@@ -25,10 +25,6 @@ const getRandomInt = (a = 1, b = 0) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const generateUrl = (id) => {
-  return `photos/${id}.jpg`;
-};
-
 const generateDescription = () => {
   return MESSAGES[getRandomInt(MESSAGES.length - 1)];
 };
@@ -47,7 +43,7 @@ const generateComment = () => {
   return {
     avatar: `img/avatar-${getRandomInt(1, 6)}.svg`,
     message: generateMessage(),
-    name: generateName()
+    name: NAMES[getRandomInt(NAMES.length - 1)]
   };
 };
 
@@ -60,42 +56,34 @@ const generateMessage = () => {
   return message.substring(1);
 };
 
-const generateName = () => {
-  const name = NAMES[getRandomInt(NAMES.length - 1)];
-  return name;
-};
-
-const generatePhoto = (id) => {
+const generatePicture = (id) => {
   return {
-    url: generateUrl(id),
+    url: `photos/${id}.jpg`,
     description: generateDescription(),
     likes: getRandomInt(15, 200),
     comments: generateComments()
   };
 };
 
-const dataBase = [];
-
-for (let i = 1; i <= PHOTOS_AMOUNT; i++) {
-  const newPhoto = generatePhoto(i);
-  dataBase.push(newPhoto);
-}
+const dataBase = new Array(PHOTOS_AMOUNT).fill().map((element, index) => {
+  element = generatePicture(index + 1);
+  return element;
+});
 
 const picturesListElement = document.querySelector(`.pictures`);
-const similarPhotoTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
-
-const renderPicture = (picture) => {
-  const photoElement = similarPhotoTemplate.cloneNode(true);
-  photoElement.querySelector(`.picture__img`).src = picture.url;
-  photoElement.querySelector(`.picture__likes`).textContent = picture.likes;
-  photoElement.querySelector(`.picture__comments`).textContent = picture.comments.length;
-  return photoElement;
-};
-
+const pictureTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
 const fragment = document.createDocumentFragment();
 
-for (let i = 0; i < PHOTOS_AMOUNT; i++) {
-  fragment.appendChild(renderPicture(dataBase[i]));
-}
+const renderPicture = (picture) => {
+  const pictureElement = pictureTemplate.cloneNode(true);
+  pictureElement.querySelector(`.picture__img`).src = picture.url;
+  pictureElement.querySelector(`.picture__likes`).textContent = picture.likes;
+  pictureElement.querySelector(`.picture__comments`).textContent = picture.comments.length;
+  return pictureElement;
+};
+
+dataBase.forEach((element) => {
+  fragment.appendChild(renderPicture(element));
+});
 
 picturesListElement.appendChild(fragment);
