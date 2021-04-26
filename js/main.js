@@ -120,4 +120,41 @@ const renderBigPicture = (id) => {
   body.classList.add(`modal-open`);
 };
 
-renderBigPicture(0);
+// renderBigPicture(0);
+
+const uploadPhotoElement = document.querySelector(`#upload-file`);
+const imageEditFormCloseButton = document.querySelector(`#upload-cancel`);
+const imageEditForm = document.querySelector(`.img-upload__overlay`);
+
+const imageEditFormOpen = () => {
+  imageEditForm.classList.remove(`hidden`);
+  body.classList.add(`modal-open`);
+  imageEditFormCloseButton.addEventListener(`click`, imageEditFormClose);
+  document.addEventListener(`keydown`, imageEditFormEscapePressHandler);
+  imageEditFormCloseButton.addEventListener(`keydown`, imageEditFormCloseButtonEnterPressHandler);
+};
+
+const imageEditFormClose = () => {
+  uploadPhotoElement.value = ``;
+  imageEditForm.classList.add(`hidden`);
+  body.classList.remove(`modal-open`);
+  imageEditFormCloseButton.removeEventListener(`click`, imageEditFormClose);
+  document.removeEventListener(`keydown`, imageEditFormEscapePressHandler);
+  imageEditFormCloseButton.removeEventListener(`keydown`, imageEditFormCloseButtonEnterPressHandler);
+};
+
+const imageEditFormEscapePressHandler = (evt) => {
+  evt.preventDefault();
+  if (evt.key === `Escape`) {
+    imageEditFormClose();
+  }
+};
+
+const imageEditFormCloseButtonEnterPressHandler = (evt) => {
+  evt.preventDefault();
+  if (evt.key === `Enter`) {
+    imageEditFormClose();
+  }
+};
+
+uploadPhotoElement.addEventListener(`change`, imageEditFormOpen);
