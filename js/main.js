@@ -59,8 +59,8 @@ const generateMessage = () => {
 
 const generatePicture = (id) => {
   return {
-    id: id - 1,
-    url: `/photos/${id}.jpg`,
+    id,
+    url: `/photos/${id + 1}.jpg`,
     description: generateDescription(),
     likes: getRandomInt(15, 200),
     comments: generateComments()
@@ -68,7 +68,7 @@ const generatePicture = (id) => {
 };
 
 const dataBase = new Array(PHOTOS_AMOUNT).fill().map((element, index) => {
-  element = generatePicture(index + 1);
+  element = generatePicture(index);
   return element;
 });
 
@@ -115,7 +115,7 @@ const renderBigPicture = (id) => {
 };
 
 const pictureClickHandler = (evt) => {
-  renderBigPicture(evt.currentTarget.id);
+  renderBigPicture(evt.currentTarget.dataset.picNumber);
 };
 
 const renderPicture = (picture) => {
@@ -123,8 +123,7 @@ const renderPicture = (picture) => {
   pictureElement.querySelector(`.picture__img`).src = picture.url;
   pictureElement.querySelector(`.picture__likes`).textContent = picture.likes;
   pictureElement.querySelector(`.picture__comments`).textContent = picture.comments.length;
-  pictureElement.setAttribute(`id`, picture.id);
-
+  pictureElement.setAttribute(`data-pic-number`, picture.id);
   pictureElement.addEventListener(`click`, pictureClickHandler);
   return pictureElement;
 };
