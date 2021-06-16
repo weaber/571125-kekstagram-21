@@ -59,7 +59,8 @@ const generateMessage = () => {
 
 const generatePicture = (id) => {
   return {
-    url: `photos/${id}.jpg`,
+    id: id - 1,
+    url: `/photos/${id}.jpg`,
     description: generateDescription(),
     likes: getRandomInt(15, 200),
     comments: generateComments()
@@ -75,24 +76,10 @@ const picturesListElement = document.querySelector(`.pictures`);
 const pictureTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
 const fragment = document.createDocumentFragment();
 
-const renderPicture = (picture) => {
-  const pictureElement = pictureTemplate.cloneNode(true);
-  pictureElement.querySelector(`.picture__img`).src = picture.url;
-  pictureElement.querySelector(`.picture__likes`).textContent = picture.likes;
-  pictureElement.querySelector(`.picture__comments`).textContent = picture.comments.length;
-  return pictureElement;
-};
-
-dataBase.forEach((element) => {
-  fragment.appendChild(renderPicture(element));
-});
-
-picturesListElement.appendChild(fragment);
-
 const renderBigPicture = (id) => {
   const bigPicture = document.querySelector(`.big-picture`);
 
-  bigPicture.querySelector(`.big-picture__img`).src = dataBase[id].url;
+  bigPicture.querySelector(`.big-picture__img`).querySelector(`img`).src = dataBase[id].url;
   bigPicture.querySelector(`.likes-count`).textContent = dataBase[id].likes;
   bigPicture.querySelector(`.comments-count`).textContent = dataBase[id].comments.length;
   bigPicture.querySelector(`.social__caption`).textContent = dataBase[id].description;
@@ -118,9 +105,35 @@ const renderBigPicture = (id) => {
   bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
   bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
   body.classList.add(`modal-open`);
+
+  const bigPictureCloseButtonClickHandler = () => {
+    bigPicture.classList.add(`hidden`);
+    body.classList.remove(`modal-open`);
+  };
+
+  bigPicture.querySelector(`.big-picture__cancel`).addEventListener(`click`, bigPictureCloseButtonClickHandler);
 };
 
-// renderBigPicture(0);
+const pictureClickHandler = (evt) => {
+  renderBigPicture(evt.currentTarget.id);
+};
+
+const renderPicture = (picture) => {
+  const pictureElement = pictureTemplate.cloneNode(true);
+  pictureElement.querySelector(`.picture__img`).src = picture.url;
+  pictureElement.querySelector(`.picture__likes`).textContent = picture.likes;
+  pictureElement.querySelector(`.picture__comments`).textContent = picture.comments.length;
+  pictureElement.setAttribute(`id`, picture.id);
+
+  pictureElement.addEventListener(`click`, pictureClickHandler);
+  return pictureElement;
+};
+
+dataBase.forEach((element) => {
+  fragment.appendChild(renderPicture(element));
+});
+
+picturesListElement.appendChild(fragment);
 
 const uploadPhotoElement = document.querySelector(`#upload-file`);
 const imageEditFormCloseButton = document.querySelector(`#upload-cancel`);
