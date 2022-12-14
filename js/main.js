@@ -37,13 +37,12 @@ const generateComment = function () {
   };
 };
 
+// Переписать на тернарный оператор
 const generateComments = function () {
-  const comments = [];
   const commentsAmount = getRandomInt(0, 3);
-  for (let i = 1; i <= commentsAmount; i++) {
-    const newComment = generateComment();
-    comments.push(newComment);
-  }
+  const comments = commentsAmount
+    ? new Array(commentsAmount).fill().map(generateComment)
+    : [];
   return comments;
 };
 
@@ -56,8 +55,5 @@ const generatePicture = function (id) {
   };
 };
 
-const dataBase = [];
+const dataBase = new Array(PICTURES_AMOUNT).fill().map((element, index) => generatePicture(index + 1));
 
-for (let i = 1; i <= PICTURES_AMOUNT; i++) {
-  dataBase.push(generatePicture(i));
-}
