@@ -37,7 +37,6 @@ const generateComment = function () {
   };
 };
 
-// Переписать на тернарный оператор
 const generateComments = function () {
   const commentsAmount = getRandomInt(0, 3);
   const comments = commentsAmount
@@ -57,14 +56,14 @@ const generatePicture = function (id) {
 
 const dataBase = new Array(PICTURES_AMOUNT).fill().map((element, index) => generatePicture(index + 1));
 
-const similarPictureTemplate = document.querySelector(`#picture`)
+const pictureTemplate = document.querySelector(`#picture`)
   .content
   .querySelector(`.picture`);
 
 const picturesListElement = document.querySelector(`.pictures`);
 
 const renderPicture = function (picture) {
-  const pictureElement = similarPictureTemplate.cloneNode(true);
+  const pictureElement = pictureTemplate.cloneNode(true);
   pictureElement.querySelector(`.picture__img`).src = picture.url;
   pictureElement.querySelector(`.picture__comments`).textContent = picture.comments.length;
   pictureElement.querySelector(`.picture__likes`).textContent = picture.likes;
@@ -73,8 +72,8 @@ const renderPicture = function (picture) {
 
 const fragment = document.createDocumentFragment();
 
-for (let i = 0; i < dataBase.length; i++) {
-  fragment.appendChild(renderPicture(dataBase[i]));
-}
+dataBase.forEach((element) => {
+  fragment.appendChild(renderPicture(element));
+});
 
 picturesListElement.appendChild(fragment);
