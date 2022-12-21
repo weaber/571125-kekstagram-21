@@ -111,4 +111,49 @@ const renderBigPicture = (id) => {
   body.classList.add(`modal-open`);
 };
 
-renderBigPicture(0);
+const imageUploadForm = document.querySelector(`#upload-select-image`);
+const imageEditForm = document.querySelector(`.img-upload__overlay`);
+const uploadFileInput = imageUploadForm.querySelector(`#upload-file`);
+const uploadCancelElement = imageUploadForm.querySelector(`#upload-cancel`);
+
+const openImageEditForm = () => {
+  imageEditForm.classList.remove(`hidden`);
+  body.classList.add(`modal-open`);
+  uploadCancelElement.addEventListener(`click`, uploadCancelElementClickHandler);
+  document.addEventListener(`keydown`, imageEditFormEscapePressHandler);
+  uploadCancelElement.addEventListener(`keydown`, uploadCancelElementEnterPressHandler);
+};
+
+const closeImageEditForm = () => {
+  uploadFileInput.value = ``;
+  imageEditForm.classList.add(`hidden`);
+  body.classList.remove(`modal-open`);
+  uploadCancelElement.removeEventListener(`click`, uploadCancelElementClickHandler);
+  document.removeEventListener(`keydown`, imageEditFormEscapePressHandler);
+  uploadCancelElement.removeEventListener(`keydown`, uploadCancelElementEnterPressHandler);
+};
+
+const imageEditFormEscapePressHandler = (evt) => {
+  evt.preventDefault();
+  if (evt.key === `Escape`) {
+    closeImageEditForm();
+  }
+};
+
+const uploadCancelElementEnterPressHandler = (evt) => {
+  evt.preventDefault();
+  if (evt.key === `Enter`) {
+    closeImageEditForm();
+  }
+};
+
+const uploadFileInputClickHandler = () => {
+  openImageEditForm();
+};
+
+const uploadCancelElementClickHandler = () => {
+  closeImageEditForm();
+};
+
+uploadFileInput.addEventListener(`change`, uploadFileInputClickHandler);
+
