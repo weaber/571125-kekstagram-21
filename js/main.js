@@ -25,10 +25,6 @@ const getRandomInt = function (a = 1, b = 0) {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const generateUrl = function (id) {
-  return `photos/${id}.jpg`;
-};
-
 const generateComment = function () {
   return {
     avatar: `img/avatar-${getRandomInt(1, 6)}.svg`,
@@ -47,14 +43,15 @@ const generateComments = function () {
 
 const generatePicture = function (id) {
   return {
-    url: generateUrl(id),
+    id,
+    url: `photos/${id + 1}.jpg`,
     likes: getRandomInt(15, 300),
     comments: generateComments(),
     description: MESSAGES[getRandomInt(MESSAGES.length - 1)]
   };
 };
 
-const dataBase = new Array(PICTURES_AMOUNT).fill().map((element, index) => generatePicture(index + 1));
+const dataBase = new Array(PICTURES_AMOUNT).fill().map((element, index) => generatePicture(index));
 
 const pictureTemplate = document.querySelector(`#picture`)
   .content
@@ -62,11 +59,17 @@ const pictureTemplate = document.querySelector(`#picture`)
 
 const picturesListElement = document.querySelector(`.pictures`);
 
+const pictureClickHanlder = (evt) => {
+  renderBigPicture(evt.currentTarget.dataset.picNumber);
+};
+
 const renderPicture = function (picture) {
   const pictureElement = pictureTemplate.cloneNode(true);
   pictureElement.querySelector(`.picture__img`).src = picture.url;
   pictureElement.querySelector(`.picture__comments`).textContent = picture.comments.length;
   pictureElement.querySelector(`.picture__likes`).textContent = picture.likes;
+  pictureElement.setAttribute(`data-pic-number`, picture.id);
+  pictureElement.addEventListener(`click`, pictureClickHanlder);
   return pictureElement;
 };
 
@@ -105,10 +108,42 @@ const renderBigPicture = (id) => {
     bigPictureComments.insertAdjacentHTML(`beforeend`, comment);
   });
 
-  bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
-  bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
-  bigPicture.classList.remove(`hidden`);
-  body.classList.add(`modal-open`);
+  const showBigPicture = () => {
+    bigPicture.querySelector(`.social__comment-count`).classList.add(`hidden`);
+    bigPicture.querySelector(`.comments-loader`).classList.add(`hidden`);
+    bigPicture.classList.remove(`hidden`);
+    body.classList.add(`modal-open`);
+  };
+
+  const closeBigPicture = () => {
+    bigPicture.classList.add(`hidden`);
+    body.classList.remove(`modal-open`);
+  };
+
+  const bigPictureCloseButtonClickHandler = () => {
+    closeBigPicture();
+  };
+
+  const bigPictureCancelEnterPressHandler = (evt) => {
+    if (evt.key === `Enter`) {
+      evt.preventDefault();
+      bigPicture.querySelector(`.big-picture__cancel`).addEventListener(`keydown`, bigPictureCancelEnterPressHandler);
+      closeBigPicture();
+    }
+  };
+
+  const bigPictureEscPressHandler = (evt) => {
+    if (evt.key === `Escape`) {
+      evt.preventDefault();
+      document.removeEventListener(`keydown`, bigPictureEscPressHandler);
+      closeBigPicture();
+    }
+  };
+
+  bigPicture.querySelector(`.big-picture__cancel`).addEventListener(`click`, bigPictureCloseButtonClickHandler);
+  bigPicture.querySelector(`.big-picture__cancel`).addEventListener(`keydown`, bigPictureCancelEnterPressHandler);
+  document.addEventListener(`keydown`, bigPictureEscPressHandler);
+  showBigPicture();
 };
 
 const imageUploadForm = document.querySelector(`#upload-select-image`);
@@ -128,21 +163,21 @@ const closeImageEditForm = () => {
   uploadFileInput.value = ``;
   imageEditForm.classList.add(`hidden`);
   body.classList.remove(`modal-open`);
-  uploadCancelElement.removeEventListener(`click`, uploadCancelElementClickHandler);
-  document.removeEventListener(`keydown`, imageEditFormEscapePressHandler);
   uploadCancelElement.removeEventListener(`keydown`, uploadCancelElementEnterPressHandler);
 };
 
 const imageEditFormEscapePressHandler = (evt) => {
-  evt.preventDefault();
   if (evt.key === `Escape`) {
+    evt.preventDefault();
+    document.removeEventListener(`keydown`, imageEditFormEscapePressHandler);
     closeImageEditForm();
   }
 };
 
 const uploadCancelElementEnterPressHandler = (evt) => {
-  evt.preventDefault();
   if (evt.key === `Enter`) {
+    evt.preventDefault();
+    uploadCancelElement.removeEventListener(`keydown`, uploadCancelElementEnterPressHandler);
     closeImageEditForm();
   }
 };
@@ -156,4 +191,3 @@ const uploadCancelElementClickHandler = () => {
 };
 
 uploadFileInput.addEventListener(`change`, uploadFileInputClickHandler);
-
