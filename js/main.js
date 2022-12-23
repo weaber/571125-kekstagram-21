@@ -221,21 +221,13 @@ const validateHashtags = () => {
 
     if (hashtags.length > HASHTAGS_MAX_AMOUNT) {
       return hashtagsInput.setCustomValidity(`Количество Хэштэгов не может быть больше ${HASHTAGS_MAX_AMOUNT}`);
-    }
-
-    if (checkDuplicates(hashtags)) {
+    } else if (checkDuplicates(hashtags)) {
       return hashtagsInput.setCustomValidity(`Хэштэги не должны повторяться`);
-    }
-
-    if (checkMinLength(hashtags)) {
+    } else if (checkMinLength(hashtags)) {
       return hashtagsInput.setCustomValidity(`Хэштэг не может состоять только из #`);
-    }
-
-    if (checkMaxLength(hashtags)) {
+    } else if (checkMaxLength(hashtags)) {
       return hashtagsInput.setCustomValidity(`Длина Хэштэга не может быть больше ${HASHTAG_MAX_LENGTH}`);
-    }
-
-    if (checkHashtagMask(hashtags)) {
+    } else if (checkHashtagMask(hashtags)) {
       const index = hashtags.findIndex((element) => !regular.test(element));
       return hashtagsInput.setCustomValidity(`Хэштэг ${hashtags[index]} не соответствует маске`);
     }
@@ -248,3 +240,84 @@ const hashtagsInputHandler = () => {
 };
 
 hashtagsInput.addEventListener(`input`, hashtagsInputHandler);
+
+const effectLevel = document.querySelector(`.effect-level`);
+const effectLevelPin = document.querySelector(`.effect-level__pin`);
+const effectLevelDepth = document.querySelector(`.effect-level__depth`);
+const effectLevelValue = document.querySelector(`.effect-level__value`);
+const imageUploadPreview = document.querySelector(`.img-upload__preview`);
+
+effectLevel.classList.add(`visually-hidden`);
+
+const effects = document.querySelectorAll(`.effects__radio`);
+
+const resetEffects = () => {
+  imageUploadPreview.className = `img-upload__preview`;
+  imageUploadPreview.style.filter = ``;
+};
+
+effects.forEach((effect) => {
+  effect.addEventListener(`click`, () => {
+    resetEffects();
+    if (effect.value === `none`) {
+      effectLevel.classList.add(`visually-hidden`);
+    } else {
+      imageUploadPreview.classList.add(`effects__preview--${effect.value}`);
+      effectLevel.classList.remove(`visually-hidden`);
+    }
+  });
+});
+
+const setEffect = (effectValue) => {
+  if (document.querySelector(`#effect-chrome`).checked) {
+    imageUploadPreview.style.filter = `grayscale(${effectValue / 100})`;
+  } else if (document.querySelector(`#effect-sepia`).checked) {
+    imageUploadPreview.style.filter = `sepia(${effectValue / 100})`;
+  } else if (document.querySelector(`#effect-marvin`).checked) {
+    imageUploadPreview.style.filter = `invert(${effectValue}%)`;
+  } else if (document.querySelector(`#effect-phobos`).checked) {
+    imageUploadPreview.style.filter = `blur(${effectValue / 100 * 3}px)`;
+  } else if (document.querySelector(`#effect-heat`).checked) {
+    imageUploadPreview.style.filter = `brightness(${1 + effectValue / 50})`;
+  } else {
+    imageUploadPreview.style.filter = ``;
+  }
+};
+
+const effectLevelPinMouseDownHandler = (evt) => {
+  evt.preventDefault();
+  const EFFECT_LEVEL_PIN_X_MIN = 5;
+  const EFFECT_LEVEL_PIN_X_MAX = 455;
+
+  let startCoordX = evt.clientX;
+
+  const mouseMoveHandler = (moveEvt) => {
+    moveEvt.preventDefault();
+    const shiftX = startCoordX - moveEvt.clientX;
+    startCoordX = moveEvt.clientX;
+    let effectLevelPinNewX = effectLevelPin.offsetLeft - shiftX;
+
+    const effectLevelWidth = document.querySelector(`.effect-level__line`).offsetWidth;
+    let newEffectLevel = Math.floor(effectLevelPinNewX / effectLevelWidth * 100);
+
+    if (effectLevelPinNewX >= EFFECT_LEVEL_PIN_X_MIN && effectLevelPinNewX <= EFFECT_LEVEL_PIN_X_MAX) {
+      effectLevelPin.style.left = `${effectLevelPinNewX}px`;
+      effectLevelDepth.style.width = `${newEffectLevel}%`;
+      effectLevelValue.value = `${newEffectLevel}`;
+      setEffect(newEffectLevel);
+    }
+  };
+
+  const mouseUpHandler = (upEvt) => {
+    upEvt.preventDefault();
+    document.removeEventListener(`mousemove`, mouseMoveHandler);
+    document.removeEventListener(`mouseup`, mouseUpHandler);
+  };
+
+  document.addEventListener(`mousemove`, mouseMoveHandler);
+  document.addEventListener(`mouseup`, mouseUpHandler);
+
+};
+
+effectLevelPin.addEventListener(`mousedown`, effectLevelPinMouseDownHandler);
+
