@@ -1,17 +1,36 @@
-import { generatePicture } from './data.js';
 import { renderPicture } from './picture.js';
 import { activateForm } from './form.js';
+import { getPictures } from './backend.js';
 
-const PICTURES_AMOUNT = 25;
-const dataBase = new Array(PICTURES_AMOUNT).fill().map((element, index) => generatePicture(index));
-const picturesListElement = document.querySelector('.pictures');
-const fragment = document.createDocumentFragment();
+const successHandler = (data) => {
+  const picturesListElement = document.querySelector('.pictures');
+  const fragment = document.createDocumentFragment();
 
-dataBase.forEach((element) => {
-  fragment.appendChild(renderPicture(element));
-});
+  data.forEach((element) => {
+    fragment.appendChild(renderPicture(element));
+  });
 
-picturesListElement.appendChild(fragment);
+  picturesListElement.appendChild(fragment);
+};
+
+const errorHandler = (errorMessage) => {
+  const errorContainerElement = document.createElement('div');
+  errorContainerElement.style = `
+    z-index: 100;
+    margin: 0 auto;
+    padding: 10px;
+    text-align: center;
+    background-color: red;
+    position: absolute;
+    left: 0;
+    right: 0;
+    font-size: 30px;
+    `;
+  errorContainerElement.textContent = errorMessage;
+  document.body.insertAdjacentElement('afterbegin', errorContainerElement);
+};
+
+getPictures(successHandler, errorHandler);
 
 const uploadFileInput = document.querySelector('#upload-file');
 
