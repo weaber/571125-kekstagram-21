@@ -151,31 +151,59 @@ const effectLevelPinMouseDownHandler = (evt) => {
   document.addEventListener('mouseup', mouseUpHandler);
 };
 
+const main = document.querySelector('main');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorMessageElement = errorMessageTemplate.cloneNode(true);
 const errorMessageElementOkButton = errorMessageElement.querySelector('.error__button');
-const errorMessageElementOkButtonClickHandler = () => {
+const removeErrorMessage = () => {
   errorMessageElement.remove();
+}
+
+const errorMessageElementOkButtonClickHandler = () => {
+  removeErrorMessage();
 };
 
 errorMessageElementOkButton.addEventListener('click', errorMessageElementOkButtonClickHandler);
 
+const errorMessageEscapePressHandler = (evt) => {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    document.removeEventListener('keydown', errorMessageEscapePressHandler);
+    removeErrorMessage();
+  }
+};
+
 const errorHandler = () => {
-  body.insertAdjacentElement('afterbegin', errorMessageElement);
+  main.insertAdjacentElement('afterbegin', errorMessageElement);
+  document.addEventListener('click', removeErrorMessage);
+  document.addEventListener('keydown', errorMessageEscapePressHandler)
   closeImageEditForm();
 };
 
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 const successMessageElement = successMessageTemplate.cloneNode(true);
 const successMessageElementOkButton = successMessageElement.querySelector('.success__button');
-const successMessageElementOkButtonClickHandler = () => {
+const removeSuccessMessage = () => {
   successMessageElement.remove();
+}
+const successMessageElementOkButtonClickHandler = () => {
+  removeSuccessMessage();
 };
 
 successMessageElementOkButton.addEventListener('click', successMessageElementOkButtonClickHandler);
 
+const successMessageEscapePressHandler = (evt) => {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    document.removeEventListener('keydown', successMessageEscapePressHandler);
+    removeSuccessMessage();
+  }
+};
+
 const successHandler = () => {
-  body.insertAdjacentElement('afterbegin', successMessageElement);
+  main.insertAdjacentElement('afterbegin', successMessageElement);
+  document.addEventListener('click', removeSuccessMessage);
+  document.addEventListener('keydown', successMessageEscapePressHandler)
   closeImageEditForm();
 };
 
