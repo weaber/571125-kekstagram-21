@@ -1,3 +1,5 @@
+import { sendForm } from './backend.js';
+
 const body = document.querySelector('body');
 const imageUploadForm = document.querySelector('#upload-select-image');
 const imageEditForm = document.querySelector('.img-upload__overlay');
@@ -147,8 +149,40 @@ const effectLevelPinMouseDownHandler = (evt) => {
 
   document.addEventListener('mousemove', mouseMoveHandler);
   document.addEventListener('mouseup', mouseUpHandler);
-
 };
+
+const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
+const errorMessageElement = errorMessageTemplate.cloneNode(true);
+const errorMessageElementOkButton = errorMessageElement.querySelector('.error__button');
+const errorMessageElementOkButtonClickHandler = () => {
+  errorMessageElement.remove();
+};
+
+errorMessageElementOkButton.addEventListener('click', errorMessageElementOkButtonClickHandler);
+
+const errorHandler = () => {
+  body.insertAdjacentElement('afterbegin', errorMessageElement);
+  closeImageEditForm();
+};
+
+const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+const successMessageElement = successMessageTemplate.cloneNode(true);
+const successMessageElementOkButton = successMessageElement.querySelector('.success__button');
+const successMessageElementOkButtonClickHandler = () => {
+  successMessageElement.remove();
+};
+
+successMessageElementOkButton.addEventListener('click', successMessageElementOkButtonClickHandler);
+
+const successHandler = () => {
+  body.insertAdjacentElement('afterbegin', successMessageElement);
+  closeImageEditForm();
+};
+
+const imageUploadFormSubmitHandler = (evt) => {
+  evt.preventDefault();
+  sendForm(new FormData(imageUploadForm), successHandler, errorHandler);
+}
 
 const activateForm = () => {
   openImageEditForm();
@@ -166,6 +200,7 @@ const activateForm = () => {
     });
   });
   hashtagsInput.addEventListener('input', hashtagsInputHandler);
+  imageUploadForm.addEventListener('submit', imageUploadFormSubmitHandler);
 }
 
 export {activateForm};
