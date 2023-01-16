@@ -71,6 +71,7 @@ const imageEditFormEscapePressHandler = (evt) => {
   if (evt.key === 'Escape' && hashtagsInput !== document.activeElement && commentInput !== document.activeElement) {
     evt.preventDefault();
     document.removeEventListener('keydown', imageEditFormEscapePressHandler);
+    resetForm();
     closeImageEditForm();
   }
 };
@@ -79,11 +80,13 @@ const uploadCancelElementEnterPressHandler = (evt) => {
   if (evt.key === 'Enter') {
     evt.preventDefault();
     uploadCancelElement.removeEventListener('keydown', uploadCancelElementEnterPressHandler);
+    resetForm();
     closeImageEditForm();
   }
 };
 
 const uploadCancelElementClickHandler = () => {
+  resetForm();
   closeImageEditForm();
 };
 
@@ -242,10 +245,21 @@ const successMessageEscapePressHandler = (evt) => {
   }
 };
 
+const resetForm = () => {
+  imageSizeValue.value = '100%';
+  imageUploadPreview.style.transform = 'scale(1.00)';
+  document.querySelector('#effect-none').checked = true;
+  resetEffects();
+  hashtagsInput.value = '';
+  commentInput.value = '';
+  uploadFileInput.value = '';
+}
+
 const successHandler = () => {
   main.insertAdjacentElement('afterbegin', successMessageElement);
   document.addEventListener('click', removeSuccessMessage);
   document.addEventListener('keydown', successMessageEscapePressHandler)
+  resetForm();
   closeImageEditForm();
 };
 
