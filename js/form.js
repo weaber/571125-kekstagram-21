@@ -5,6 +5,7 @@ const imageUploadForm = document.querySelector('#upload-select-image');
 const imageEditForm = document.querySelector('.img-upload__overlay');
 const uploadFileInput = imageUploadForm.querySelector('#upload-file');
 const uploadCancelElement = imageUploadForm.querySelector('#upload-cancel');
+const imageUploadPreview = document.querySelector('.img-upload__preview img');
 
 const openImageEditForm = () => {
   imageEditForm.classList.remove('hidden');
@@ -20,6 +21,48 @@ const closeImageEditForm = () => {
   body.classList.remove('modal-open');
   uploadCancelElement.removeEventListener('keydown', uploadCancelElementEnterPressHandler);
 };
+
+const decreaseImageButton = imageEditForm.querySelector('.scale__control--smaller');
+const inscreaseImageButton = imageEditForm.querySelector('.scale__control--bigger');
+const imageSizeValue = imageEditForm.querySelector('.scale__control--value');
+
+const decreaseImage = () => {
+  switch (imageSizeValue.value) {
+    case '100%':
+      imageSizeValue.value = '75%';
+      imageUploadPreview.style.transform = 'scale(0.75)';
+      break;
+    case '75%':
+      imageSizeValue.value = '50%';
+      imageUploadPreview.style.transform = 'scale(0.50)';
+      break;
+    case '50%':
+      imageSizeValue.value = '25%';
+      imageUploadPreview.style.transform = 'scale(0.25)';
+      break;
+    default:
+      break;
+  }
+}
+
+const increaseImage = () => {
+  switch (imageSizeValue.value) {
+    case '25%':
+      imageSizeValue.value = '50%';
+      imageUploadPreview.style.transform = 'scale(0.50)';
+      break;
+    case '50%':
+      imageSizeValue.value = '75%';
+      imageUploadPreview.style.transform = 'scale(0.75)';
+      break;
+    case '75%':
+      imageSizeValue.value = '100%';
+      imageUploadPreview.style.transform = 'scale(1.00)';
+      break;
+    default:
+      break;
+  }
+}
 
 const hashtagsInput = document.querySelector('.text__hashtags');
 const commentInput = document.querySelector('.text__description');
@@ -92,7 +135,6 @@ const effectLevel = document.querySelector('.effect-level');
 const effectLevelPin = document.querySelector('.effect-level__pin');
 const effectLevelDepth = document.querySelector('.effect-level__depth');
 const effectLevelValue = document.querySelector('.effect-level__value');
-const imageUploadPreview = document.querySelector('.img-upload__preview');
 
 const effects = document.querySelectorAll('.effects__radio');
 
@@ -214,6 +256,8 @@ const imageUploadFormSubmitHandler = (evt) => {
 
 const activateForm = () => {
   openImageEditForm();
+  decreaseImageButton.addEventListener('click', decreaseImage);
+  inscreaseImageButton.addEventListener('click', increaseImage);
   effectLevel.classList.add('visually-hidden');
   effectLevelPin.addEventListener('mousedown', effectLevelPinMouseDownHandler);
   effects.forEach((effect) => {
