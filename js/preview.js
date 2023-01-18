@@ -44,10 +44,41 @@ const renderComment = (comment) => {
 };
 
 const renderComments = (comments) => {
-  bigPicture.querySelector('.social__comment-count').classList.add('hidden');
-  bigPicture.querySelector('.comments-loader').classList.add('hidden');
-  comments.forEach((element) => renderComment(element));
-}
+  bigPictureComments.innerHTML = '';
+  const commentsLoaderButton = bigPicture.querySelector('.comments-loader');
+  const commentsCountElement = bigPicture.querySelector('.social__comment-count');
+
+  let commentsShown = 5;
+  const COMMENTS_PER_STEP = 5;
+
+  const commentsLoaderButtonClickHandler = () => {
+    if (commentsShown + COMMENTS_PER_STEP < comments.length) {
+      commentsShown = commentsShown + COMMENTS_PER_STEP;
+      commentsCountElement.querySelector('.comments-shown').textContent = commentsShown;
+      bigPictureComments.innerHTML = '';
+      comments.slice(0, Math.min(commentsShown, commentsShown + COMMENTS_PER_STEP)).forEach((element) => renderComment(element));
+    } else {
+      commentsShown = comments.length;
+      commentsCountElement.classList.add('hidden');
+      commentsLoaderButton.classList.add('hidden');
+      bigPictureComments.innerHTML = '';
+      comments.slice(0, comments.length).forEach((element) => renderComment(element));
+      commentsLoaderButton.removeEventListener('click', commentsLoaderButtonClickHandler);
+    }
+  }
+
+  if (comments.length <= 5) {
+    commentsCountElement.classList.add('hidden');
+    commentsLoaderButton.classList.add('hidden');
+    comments.forEach((element) => renderComment(element));
+  } else {
+    commentsCountElement.querySelector('.comments-shown').textContent = commentsShown;
+    commentsCountElement.classList.remove('hidden');
+    commentsLoaderButton.classList.remove('hidden');
+    comments.slice(0, commentsShown).forEach((element) => renderComment(element));
+    commentsLoaderButton.addEventListener('click', commentsLoaderButtonClickHandler);
+  }
+};
 
 const renderBigPicture = (picture) => {
   bigPicture.querySelector('.big-picture__img img').src = picture.url;
@@ -55,7 +86,6 @@ const renderBigPicture = (picture) => {
   bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
   bigPicture.querySelector('.social__caption').textContent = picture.description;
 
-  bigPictureComments.innerHTML = '';
   renderComments(picture.comments);
 
   bigPictureCancelButton.addEventListener('click', bigPictureCloseButtonClickHandler);
