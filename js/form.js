@@ -268,7 +268,7 @@ const imageUploadFormSubmitHandler = (evt) => {
   sendForm(new FormData(imageUploadForm), successHandler, errorHandler);
 }
 
-const activateForm = () => {
+const uploadFileInputClickHandler = () => {
   openImageEditForm();
   decreaseImageButton.addEventListener('click', decreaseImage);
   inscreaseImageButton.addEventListener('click', increaseImage);
@@ -288,5 +288,9 @@ const activateForm = () => {
   hashtagsInput.addEventListener('input', hashtagsInputHandler);
   imageUploadForm.addEventListener('submit', imageUploadFormSubmitHandler);
 }
+
+const activateForm = () => {
+  uploadFileInput.addEventListener('change', uploadFileInputClickHandler);
+};
 
 export {activateForm};

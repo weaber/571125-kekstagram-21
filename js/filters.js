@@ -19,4 +19,4 @@ const filterPictures = (filterType, data) => {
   }
 };
 
-export { filterPictures }
+export { FilterType, filterPictures }
