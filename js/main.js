@@ -2,17 +2,20 @@ import { createPictureElement } from './picture.js';
 import { filterPictures } from './filters.js';
 import { activateForm } from './form.js';
 import { getPictures } from './backend.js';
+import { debounce } from './debounce.js';
 
 const imageFilters = document.querySelector('.img-filters');
 const filtersCollection = imageFilters.querySelectorAll('.img-filters__button');
 let serverData = [];
+let filterType;
 
 const filterClickHandler = (evt) => {
   filtersCollection.forEach((element) => {
     element.classList.remove('img-filters__button--active');
   });
   evt.target.classList.add('img-filters__button--active');
-  updatePictures(evt.target.id, serverData);
+  filterType = evt.target.id;
+  updatePicturesWithDebounce();
 };
 
 const showFilters = () => {
@@ -40,11 +43,13 @@ const removePictures = () => {
   document.querySelectorAll('.picture').forEach((element) => element.remove());
 };
 
-const updatePictures = (filterType, data) => {
-  const filteredPictures = filterPictures(filterType, data);
+const updatePictures = () => {
+  const filteredPictures = filterPictures(filterType, serverData);
   removePictures();
   renderPictures(filteredPictures);
 };
+
+const updatePicturesWithDebounce = debounce(updatePictures);
 
 const successHandler = (data) => {
   serverData = data;
