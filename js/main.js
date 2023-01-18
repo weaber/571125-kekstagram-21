@@ -1,16 +1,55 @@
-import { renderPicture } from './picture.js';
+import { createPictureElement } from './picture.js';
+import { filterPictures } from './filters.js';
 import { activateForm } from './form.js';
 import { getPictures } from './backend.js';
 
-const successHandler = (data) => {
+const imageFilters = document.querySelector('.img-filters');
+const filtersCollection = imageFilters.querySelectorAll('.img-filters__button');
+let serverData = [];
+
+const filterClickHandler = (evt) => {
+  filtersCollection.forEach((element) => {
+    element.classList.remove('img-filters__button--active');
+  });
+  evt.target.classList.add('img-filters__button--active');
+  updatePictures(evt.target.id, serverData);
+};
+
+const showFilters = () => {
+  imageFilters.classList.remove('img-filters--inactive');
+};
+
+const activateFilters = () => {
+  filtersCollection.forEach((element) => {
+    element.addEventListener('click', filterClickHandler);
+  });
+  showFilters();
+};
+
+const renderPictures = (data) => {
   const picturesListElement = document.querySelector('.pictures');
   const fragment = document.createDocumentFragment();
-
   data.forEach((element) => {
-    fragment.appendChild(renderPicture(element));
+    fragment.appendChild(createPictureElement(element));
   });
 
   picturesListElement.appendChild(fragment);
+};
+
+const removePictures = () => {
+  document.querySelectorAll('.picture').forEach((element) => element.remove());
+};
+
+const updatePictures = (filterType, data) => {
+  const filteredPictures = filterPictures(filterType, data);
+  removePictures();
+  renderPictures(filteredPictures);
+};
+
+const successHandler = (data) => {
+  serverData = data;
+  renderPictures(data);
+  activateFilters();
 };
 
 const errorHandler = (errorMessage) => {

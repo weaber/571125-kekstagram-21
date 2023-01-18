@@ -4,7 +4,7 @@ const pictureTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
-const renderPicture = function (picture) {
+const createPictureElement = function (picture) {
 
   const pictureClickHanlder = () => {
     renderBigPicture(picture);
@@ -19,4 +19,4 @@ const renderPicture = function (picture) {
   return pictureElement;
 };
 
-export {renderPicture};
+export { createPictureElement };
