@@ -1,4 +1,4 @@
-import { renderBigPicture } from './preview.js';
+import { renderBigPicture } from './render-big-picture.js';
 
 const pictureTemplate = document.querySelector('#picture')
   .content
