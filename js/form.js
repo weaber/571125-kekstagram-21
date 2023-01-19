@@ -1,5 +1,6 @@
 import { sendForm } from './backend.js';
 import { validateHashtags } from './hashtags.js';
+import { uploadFilePreview } from './upload-file-preview.js';
 
 const body = document.querySelector('body');
 const imageUploadForm = document.querySelector('#upload-select-image');
@@ -229,7 +230,7 @@ const imageUploadFormSubmitHandler = (evt) => {
   sendForm(new FormData(imageUploadForm), successHandler, errorHandler);
 }
 
-const effectClickHandler = (evt) => {
+const effectsFieldsetChangeHandler = (evt) => {
   resetEffects();
   setEffect(effectLevelValue.value);
   if (evt.target.value === 'none') {
@@ -240,19 +241,20 @@ const effectClickHandler = (evt) => {
   }
 }
 
-const uploadFileInputClickHandler = () => {
+const uploadFileInputChangeHandler = () => {
   openImageEditForm();
   decreaseImageButton.addEventListener('click', decreaseImage);
   inscreaseImageButton.addEventListener('click', increaseImage);
   effectLevel.classList.add('visually-hidden');
   effectLevelPin.addEventListener('mousedown', effectLevelPinMouseDownHandler);
-  effectsFieldset.addEventListener('change', effectClickHandler);
+  effectsFieldset.addEventListener('change', effectsFieldsetChangeHandler);
   hashtagsInput.addEventListener('input', hashtagsInputHandler);
   imageUploadForm.addEventListener('submit', imageUploadFormSubmitHandler);
+  uploadFilePreview();
 }
 
 const activateForm = () => {
-  uploadFileInput.addEventListener('change', uploadFileInputClickHandler);
+  uploadFileInput.addEventListener('change', uploadFileInputChangeHandler);
 };
 
 export {activateForm};
