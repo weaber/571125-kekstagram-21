@@ -1,4 +1,5 @@
 import { sendForm } from './backend.js';
+import { validateHashtags } from './hashtags.js';
 
 const body = document.querySelector('body');
 const imageUploadForm = document.querySelector('#upload-select-image');
@@ -90,46 +91,6 @@ const uploadCancelElementClickHandler = () => {
   closeImageEditForm();
 };
 
-const validateHashtags = () => {
-  if (hashtagsInput.value) {
-    const hashtags = hashtagsInput.value.trim().toLowerCase().split(' ');
-    const HASHTAG_MIN_LENGTH = 2;
-    const HASHTAG_MAX_LENGTH = 7;
-    const HASHTAGS_MAX_AMOUNT = 3;
-    const regular = /^#[\w]*$/;
-
-    const checkDuplicates = (array) => {
-      return (new Set(array)).size !== array.length;
-    };
-
-    const checkMinLength = (hashTags) => {
-      return hashTags.some((element) => element.length < HASHTAG_MIN_LENGTH);
-    };
-
-    const checkMaxLength = (hashTags) => {
-      return hashTags.some((element) => element.length > HASHTAG_MAX_LENGTH);
-    };
-
-    const checkHashtagMask = (hashTags) => {
-      return hashTags.some((element) => !regular.test(element));
-    };
-
-    if (hashtags.length > HASHTAGS_MAX_AMOUNT) {
-      return hashtagsInput.setCustomValidity(`Количество Хэштэгов не может быть больше ${HASHTAGS_MAX_AMOUNT}`);
-    } else if (checkDuplicates(hashtags)) {
-      return hashtagsInput.setCustomValidity('Хэштэги не должны повторяться');
-    } else if (checkMinLength(hashtags)) {
-      return hashtagsInput.setCustomValidity('Хэштэг не может состоять только из #');
-    } else if (checkMaxLength(hashtags)) {
-      return hashtagsInput.setCustomValidity(`Длина Хэштэга не может быть больше ${HASHTAG_MAX_LENGTH}`);
-    } else if (checkHashtagMask(hashtags)) {
-      const index = hashtags.findIndex((element) => !regular.test(element));
-      return hashtagsInput.setCustomValidity(`Хэштэг ${hashtags[index]} не соответствует маске`);
-    }
-  }
-  return hashtagsInput.setCustomValidity('');
-};
-
 const hashtagsInputHandler = () => {
   validateHashtags();
 };
@@ -139,7 +100,7 @@ const effectLevelPin = document.querySelector('.effect-level__pin');
 const effectLevelDepth = document.querySelector('.effect-level__depth');
 const effectLevelValue = document.querySelector('.effect-level__value');
 
-const effects = document.querySelectorAll('.effects__radio');
+const effectsFieldset = document.querySelector('.img-upload__effect-level');
 
 const resetEffects = () => {
   imageUploadPreview.className = '';
@@ -286,9 +247,7 @@ const uploadFileInputClickHandler = () => {
   inscreaseImageButton.addEventListener('click', increaseImage);
   effectLevel.classList.add('visually-hidden');
   effectLevelPin.addEventListener('mousedown', effectLevelPinMouseDownHandler);
-  effects.forEach((effect) => {
-    effect.addEventListener('click', effectClickHandler);
-  });
+  effectsFieldset.addEventListener('change', effectClickHandler);
   hashtagsInput.addEventListener('input', hashtagsInputHandler);
   imageUploadForm.addEventListener('submit', imageUploadFormSubmitHandler);
 }
