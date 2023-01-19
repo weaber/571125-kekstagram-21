@@ -142,7 +142,7 @@ const effectLevelValue = document.querySelector('.effect-level__value');
 const effects = document.querySelectorAll('.effects__radio');
 
 const resetEffects = () => {
-  imageUploadPreview.className = 'img-upload__preview';
+  imageUploadPreview.className = '';
   imageUploadPreview.style.filter = '';
 };
 
@@ -270,6 +270,7 @@ const imageUploadFormSubmitHandler = (evt) => {
 
 const effectClickHandler = (evt) => {
   resetEffects();
+  setEffect(effectLevelValue.value);
   if (evt.target.value === 'none') {
     effectLevel.classList.add('visually-hidden');
   } else {
@@ -279,6 +280,7 @@ const effectClickHandler = (evt) => {
 }
 
 const uploadFileInputClickHandler = () => {
+  resetForm();
   openImageEditForm();
   decreaseImageButton.addEventListener('click', decreaseImage);
   inscreaseImageButton.addEventListener('click', increaseImage);
