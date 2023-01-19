@@ -19,6 +19,7 @@ const openImageEditForm = () => {
 
 const closeImageEditForm = () => {
   uploadFileInput.value = '';
+  imageUploadPreview.src = '';
   imageEditForm.classList.add('hidden');
   body.classList.remove('modal-open');
   uploadCancelElement.removeEventListener('keydown', uploadCancelElementEnterPressHandler);
