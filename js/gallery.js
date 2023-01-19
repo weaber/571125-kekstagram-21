@@ -56,7 +56,7 @@ const successHandler = (data) => {
   activateFilters();
 };
 
-const errorHandler = (errorMessage) => {
+const errorHandler = () => {
   const errorContainerElement = document.createElement('div');
   errorContainerElement.style = `
     z-index: 100;
@@ -69,7 +69,7 @@ const errorHandler = (errorMessage) => {
     right: 0;
     font-size: 30px;
     `;
-  errorContainerElement.textContent = errorMessage;
+  errorContainerElement.textContent = 'Ошибка загрузки данных';
   document.body.insertAdjacentElement('afterbegin', errorContainerElement);
 };
 
