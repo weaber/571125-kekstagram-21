@@ -268,6 +268,16 @@ const imageUploadFormSubmitHandler = (evt) => {
   sendForm(new FormData(imageUploadForm), successHandler, errorHandler);
 }
 
+const effectClickHandler = (evt) => {
+  resetEffects();
+  if (evt.target.value === 'none') {
+    effectLevel.classList.add('visually-hidden');
+  } else {
+    imageUploadPreview.classList.add(`effects__preview--${evt.target.value}`);
+    effectLevel.classList.remove('visually-hidden');
+  }
+}
+
 const uploadFileInputClickHandler = () => {
   openImageEditForm();
   decreaseImageButton.addEventListener('click', decreaseImage);
@@ -275,15 +285,7 @@ const uploadFileInputClickHandler = () => {
   effectLevel.classList.add('visually-hidden');
   effectLevelPin.addEventListener('mousedown', effectLevelPinMouseDownHandler);
   effects.forEach((effect) => {
-    effect.addEventListener('click', () => {
-      resetEffects();
-      if (effect.value === 'none') {
-        effectLevel.classList.add('visually-hidden');
-      } else {
-        imageUploadPreview.classList.add(`effects__preview--${effect.value}`);
-        effectLevel.classList.remove('visually-hidden');
-      }
-    });
+    effect.addEventListener('click', effectClickHandler);
   });
   hashtagsInput.addEventListener('input', hashtagsInputHandler);
   imageUploadForm.addEventListener('submit', imageUploadFormSubmitHandler);
