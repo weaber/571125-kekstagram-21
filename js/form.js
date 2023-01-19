@@ -100,7 +100,7 @@ const effectLevelPin = document.querySelector('.effect-level__pin');
 const effectLevelDepth = document.querySelector('.effect-level__depth');
 const effectLevelValue = document.querySelector('.effect-level__value');
 
-const effectsFieldset = document.querySelector('.img-upload__effect-level');
+const effectsFieldset = document.querySelector('.img-upload__effects');
 
 const resetEffects = () => {
   imageUploadPreview.className = '';
@@ -241,7 +241,6 @@ const effectClickHandler = (evt) => {
 }
 
 const uploadFileInputClickHandler = () => {
-  resetForm();
   openImageEditForm();
   decreaseImageButton.addEventListener('click', decreaseImage);
   inscreaseImageButton.addEventListener('click', increaseImage);
