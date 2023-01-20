@@ -6,7 +6,7 @@ const getPictures = (onSuccess, onError) => {
     .then((response) => response.json())
     .then((data) => onSuccess(data))
     .catch((error) => onError(error))
-}
+};
 
 const sendForm = (data, onSuccess, onError) => {
   fetch(
@@ -24,6 +24,6 @@ const sendForm = (data, onSuccess, onError) => {
       }
     })
     .catch((error) => onError(error))
-}
+};
 
 export {getPictures, sendForm};

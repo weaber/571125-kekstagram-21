@@ -75,6 +75,6 @@ const errorHandler = () => {
 
 const activateApp = () => {
   getPictures(successHandler, errorHandler);
-}
+};
 
 export { activateApp }

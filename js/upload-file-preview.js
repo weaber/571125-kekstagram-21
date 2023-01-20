@@ -17,6 +17,6 @@ const uploadFilePreview = () => {
     reader.addEventListener('load', imageUploadPreviewLoadHandler);
     reader.readAsDataURL(file);
   }
-}
+};
 
 export { uploadFilePreview }

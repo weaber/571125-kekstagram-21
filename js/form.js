@@ -42,12 +42,12 @@ const setScale = (scaleType) => {
     newScale = currentScale - SCALE_GAP;
     imageUploadPreview.style.transform = `scale(${newScale / 100})`;
   }
-}
+};
 
 const scaleFieldsetClickHandler = (evt) => {
   const scaleType = (evt.target.classList.contains('scale__control--bigger')) ? 'increase' : (evt.target.classList.contains('scale__control--smaller')) ? 'decrease' : '';
   setScale(scaleType);
-}
+};
 
 const hashtagsInput = document.querySelector('.text__hashtags');
 const commentInput = document.querySelector('.text__description');
@@ -151,9 +151,10 @@ const main = document.querySelector('main');
 const errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
 const errorMessageElement = errorMessageTemplate.cloneNode(true);
 const errorMessageElementOkButton = errorMessageElement.querySelector('.error__button');
+
 const removeErrorMessage = () => {
   errorMessageElement.remove();
-}
+};
 
 const errorMessageElementOkButtonClickHandler = () => {
   removeErrorMessage();
@@ -180,9 +181,11 @@ const errorHandler = () => {
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 const successMessageElement = successMessageTemplate.cloneNode(true);
 const successMessageElementOkButton = successMessageElement.querySelector('.success__button');
+
 const removeSuccessMessage = () => {
   successMessageElement.remove();
-}
+};
+
 const successMessageElementOkButtonClickHandler = () => {
   removeSuccessMessage();
 };
@@ -206,7 +209,7 @@ const resetForm = () => {
   hashtagsInput.value = '';
   commentInput.value = '';
   uploadFileInput.value = '';
-}
+};
 
 const successHandler = () => {
   main.insertAdjacentElement('afterbegin', successMessageElement);
@@ -219,7 +222,7 @@ const successHandler = () => {
 const imageUploadFormSubmitHandler = (evt) => {
   evt.preventDefault();
   sendForm(new FormData(imageUploadForm), successHandler, errorHandler);
-}
+};
 
 const effectsFieldsetChangeHandler = (evt) => {
   resetEffects();
@@ -230,7 +233,7 @@ const effectsFieldsetChangeHandler = (evt) => {
     imageUploadPreview.classList.add(`effects__preview--${evt.target.value}`);
     effectLevel.classList.remove('visually-hidden');
   }
-}
+};
 
 const uploadFileInputChangeHandler = () => {
   openImageEditForm();
@@ -241,7 +244,7 @@ const uploadFileInputChangeHandler = () => {
   hashtagsInput.addEventListener('input', hashtagsInputHandler);
   imageUploadForm.addEventListener('submit', imageUploadFormSubmitHandler);
   uploadFilePreview();
-}
+};
 
 const activateForm = () => {
   uploadFileInput.addEventListener('change', uploadFileInputChangeHandler);

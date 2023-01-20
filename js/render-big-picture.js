@@ -65,7 +65,7 @@ const renderComments = (comments) => {
       comments.slice(0, comments.length).forEach((element) => renderComment(element));
       commentsLoaderButton.removeEventListener('click', commentsLoaderButtonClickHandler);
     }
-  }
+  };
 
   if (comments.length <= 5) {
     commentsCountElement.classList.add('hidden');
@@ -92,6 +92,6 @@ const renderBigPicture = (picture) => {
   bigPictureCancelButton.addEventListener('keydown', bigPictureCancelEnterPressHandler);
   document.addEventListener('keydown', bigPictureEscPressHandler);
   showBigPicture();
-}
+};
 
 export {renderBigPicture};
