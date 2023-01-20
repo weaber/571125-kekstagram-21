@@ -92,10 +92,11 @@ const effectLevelValue = document.querySelector('.effect-level__value');
 
 const effectsFieldset = document.querySelector('.img-upload__effects');
 
-const resetEffects = () => {
-  imageUploadPreview.className = '';
-  imageUploadPreview.style.filter = '';
-};
+const setSlider = (pinPosition, effectLevel) => {
+  effectLevelPin.style.left = `${pinPosition}px`;
+  effectLevelDepth.style.width = `${effectLevel}%`;
+  effectLevelValue.value = `${effectLevel}`;
+}
 
 const setEffect = (effectValue) => {
   if (document.querySelector('#effect-chrome').checked) {
@@ -113,26 +114,33 @@ const setEffect = (effectValue) => {
   }
 };
 
+const EFFECT_LEVEL_DEFAULT = '100';
+
+const resetEffects = () => {
+  imageUploadPreview.className = '';
+  imageUploadPreview.style.filter = '';
+  effectLevel.value = EFFECT_LEVEL_DEFAULT;
+  setSlider(EFFECT_LEVEL_PIN_X_MAX, effectLevel.value);
+  setEffect(effectLevelValue.value);
+};
+
+const EFFECT_LEVEL_PIN_X_MIN = 5;
+const EFFECT_LEVEL_PIN_X_MAX = 455;
+
 const effectLevelPinMouseDownHandler = (evt) => {
   evt.preventDefault();
-  const EFFECT_LEVEL_PIN_X_MIN = 5;
-  const EFFECT_LEVEL_PIN_X_MAX = 455;
-
   let startCoordX = evt.clientX;
 
   const mouseMoveHandler = (moveEvt) => {
     moveEvt.preventDefault();
     const shiftX = startCoordX - moveEvt.clientX;
     startCoordX = moveEvt.clientX;
-    let effectLevelPinNewX = effectLevelPin.offsetLeft - shiftX;
-
+    const effectLevelPinNewX = effectLevelPin.offsetLeft - shiftX;
     const effectLevelWidth = document.querySelector('.effect-level__line').offsetWidth;
-    let newEffectLevel = Math.floor(effectLevelPinNewX / effectLevelWidth * 100);
 
     if (effectLevelPinNewX >= EFFECT_LEVEL_PIN_X_MIN && effectLevelPinNewX <= EFFECT_LEVEL_PIN_X_MAX) {
-      effectLevelPin.style.left = `${effectLevelPinNewX}px`;
-      effectLevelDepth.style.width = `${newEffectLevel}%`;
-      effectLevelValue.value = `${newEffectLevel}`;
+      const newEffectLevel = Math.floor(effectLevelPinNewX / effectLevelWidth * 100);
+      setSlider(effectLevelPinNewX, newEffectLevel)
       setEffect(newEffectLevel);
     }
   };
@@ -226,7 +234,6 @@ const imageUploadFormSubmitHandler = (evt) => {
 
 const effectsFieldsetChangeHandler = (evt) => {
   resetEffects();
-  setEffect(effectLevelValue.value);
   if (evt.target.value === 'none') {
     effectLevel.classList.add('visually-hidden');
   } else {
