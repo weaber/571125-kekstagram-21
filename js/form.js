@@ -23,46 +23,30 @@ const closeImageEditForm = () => {
   uploadCancelElement.removeEventListener('keydown', uploadCancelElementEnterPressHandler);
 };
 
-const decreaseImageButton = imageEditForm.querySelector('.scale__control--smaller');
-const inscreaseImageButton = imageEditForm.querySelector('.scale__control--bigger');
 const imageSizeValue = imageEditForm.querySelector('.scale__control--value');
+const scaleFieldset = imageEditForm.querySelector('.img-upload__scale');
 
-const decreaseImage = () => {
-  switch (imageSizeValue.value) {
-    case '100%':
-      imageSizeValue.value = '75%';
-      imageUploadPreview.style.transform = 'scale(0.75)';
-      break;
-    case '75%':
-      imageSizeValue.value = '50%';
-      imageUploadPreview.style.transform = 'scale(0.50)';
-      break;
-    case '50%':
-      imageSizeValue.value = '25%';
-      imageUploadPreview.style.transform = 'scale(0.25)';
-      break;
-    default:
-      break;
+const SCALE_GAP = 25;
+const MAX_SCALE = 100;
+const MIN_SCALE = 25;
+
+const setScale = (scaleType) => {
+  const currentScale = parseFloat(imageSizeValue.value);
+  let newScale;
+  if (scaleType === 'increase' && currentScale + SCALE_GAP <= MAX_SCALE) {
+    newScale = currentScale + SCALE_GAP;
+    imageSizeValue.value = `${newScale}%`
+    imageUploadPreview.style.transform = `scale(${newScale / 100})`;
+  } else if (scaleType === 'decrease' && currentScale - SCALE_GAP >= MIN_SCALE) {
+    imageSizeValue.value = `${currentScale - SCALE_GAP}%`
+    newScale = currentScale - SCALE_GAP;
+    imageUploadPreview.style.transform = `scale(${newScale / 100})`;
   }
 }
 
-const increaseImage = () => {
-  switch (imageSizeValue.value) {
-    case '25%':
-      imageSizeValue.value = '50%';
-      imageUploadPreview.style.transform = 'scale(0.50)';
-      break;
-    case '50%':
-      imageSizeValue.value = '75%';
-      imageUploadPreview.style.transform = 'scale(0.75)';
-      break;
-    case '75%':
-      imageSizeValue.value = '100%';
-      imageUploadPreview.style.transform = 'scale(1.00)';
-      break;
-    default:
-      break;
-  }
+const scaleFieldsetClickHandler = (evt) => {
+  const scaleType = (evt.target.classList.contains('scale__control--bigger')) ? 'increase' : (evt.target.classList.contains('scale__control--smaller')) ? 'decrease' : '';
+  setScale(scaleType);
 }
 
 const hashtagsInput = document.querySelector('.text__hashtags');
@@ -250,8 +234,7 @@ const effectsFieldsetChangeHandler = (evt) => {
 
 const uploadFileInputChangeHandler = () => {
   openImageEditForm();
-  decreaseImageButton.addEventListener('click', decreaseImage);
-  inscreaseImageButton.addEventListener('click', increaseImage);
+  scaleFieldset.addEventListener('click', scaleFieldsetClickHandler);
   effectLevel.classList.add('visually-hidden');
   effectLevelPin.addEventListener('mousedown', effectLevelPinMouseDownHandler);
   effectsFieldset.addEventListener('change', effectsFieldsetChangeHandler);
