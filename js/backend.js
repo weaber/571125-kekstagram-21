@@ -1,6 +1,6 @@
 const GET_URL = 'https://22.javascript.pages.academy/kekstagram/data';
 const SEND_URL = 'https://22.javascript.pages.academy/kekstagram';
-
+const SUCCESS_CODE = 200;
 const getPictures = (onSuccess, onError) => {
   fetch(GET_URL)
     .then((response) => response.json())
@@ -17,7 +17,7 @@ const sendForm = (data, onSuccess, onError) => {
     },
   )
     .then((response) => {
-      if (response.status === 200) {
+      if (response.status === SUCCESS_CODE) {
         onSuccess()
       } else {
         onError();
