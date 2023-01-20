@@ -18,8 +18,6 @@ const openImageEditForm = () => {
 };
 
 const closeImageEditForm = () => {
-  uploadFileInput.value = '';
-  imageUploadPreview.src = '';
   imageEditForm.classList.add('hidden');
   body.classList.remove('modal-open');
   uploadCancelElement.removeEventListener('keydown', uploadCancelElementEnterPressHandler);
@@ -95,6 +93,12 @@ const uploadCancelElementClickHandler = () => {
 
 const hashtagsInputHandler = () => {
   validateHashtags();
+  if (hashtagsInput.validity.valid) {
+    hashtagsInput.style = 'box-shadow: none'
+  } else {
+    hashtagsInput.reportValidity();
+    hashtagsInput.style = 'box-shadow: 0px 0px 5px 5px red;'
+  }
 };
 
 const effectLevel = document.querySelector('.effect-level');
@@ -185,6 +189,7 @@ const errorHandler = () => {
   main.insertAdjacentElement('afterbegin', errorMessageElement);
   document.addEventListener('click', removeErrorMessage);
   document.addEventListener('keydown', errorMessageEscapePressHandler)
+  resetForm();
   closeImageEditForm();
 };
 
@@ -210,6 +215,7 @@ const successMessageEscapePressHandler = (evt) => {
 
 const resetForm = () => {
   imageSizeValue.value = '100%';
+  imageUploadPreview.src = '';
   imageUploadPreview.style.transform = 'scale(1.00)';
   document.querySelector('#effect-none').checked = true;
   resetEffects();

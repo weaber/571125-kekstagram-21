@@ -23,7 +23,6 @@ const sendForm = (data, onSuccess, onError) => {
         onError();
       }
     })
-    .then((response) => onSuccess(response.json()))
     .catch((error) => onError(error))
 }
 
