@@ -59,7 +59,7 @@ const renderComments = (comments) => {
       comments.slice(0, Math.min(commentsShown, commentsShown + COMMENTS_PER_STEP)).forEach((element) => renderComment(element));
     } else {
       commentsShown = comments.length;
-      commentsCountElement.classList.add('hidden');
+      commentsCountElement.querySelector('.comments-shown').textContent = commentsShown;
       commentsLoaderButton.classList.add('hidden');
       bigPictureComments.innerHTML = '';
       comments.slice(0, comments.length).forEach((element) => renderComment(element));
@@ -68,7 +68,8 @@ const renderComments = (comments) => {
   };
 
   if (comments.length <= 5) {
-    commentsCountElement.classList.add('hidden');
+    commentsShown = comments.length;
+    commentsCountElement.querySelector('.comments-shown').textContent = commentsShown;
     commentsLoaderButton.classList.add('hidden');
     comments.forEach((element) => renderComment(element));
   } else {
