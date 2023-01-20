@@ -27,13 +27,13 @@ const validateHashtags = () => {
       return hashtagsInput.setCustomValidity(`Количество Хэштэгов не может быть больше ${HASHTAGS_MAX_AMOUNT}`);
     } else if (checkDuplicates(hashtags)) {
       return hashtagsInput.setCustomValidity('Хэштэги не должны повторяться');
+    } else if (checkHashtagMask(hashtags)) {
+      const index = hashtags.findIndex((element) => !regular.test(element));
+      return hashtagsInput.setCustomValidity(`Хэштэг ${hashtags[index]} не соответствует маске`);
     } else if (checkMinLength(hashtags)) {
       return hashtagsInput.setCustomValidity('Хэштэг не может состоять только из #');
     } else if (checkMaxLength(hashtags)) {
       return hashtagsInput.setCustomValidity(`Длина Хэштэга не может быть больше ${HASHTAG_MAX_LENGTH}`);
-    } else if (checkHashtagMask(hashtags)) {
-      const index = hashtags.findIndex((element) => !regular.test(element));
-      return hashtagsInput.setCustomValidity(`Хэштэг ${hashtags[index]} не соответствует маске`);
     }
   }
   return hashtagsInput.setCustomValidity('');
